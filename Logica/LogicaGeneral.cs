@@ -51,5 +51,10 @@ namespace EnrolmentSystem_BEHS.Logica
             return datos.Matricular(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf);
         }
 
+        public string EnrolledCurrentYear(string c)
+        {
+            return datos.EnrolledCurrentYear(c);
+        }
+
     }
 }

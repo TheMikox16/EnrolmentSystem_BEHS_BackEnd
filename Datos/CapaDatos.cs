@@ -87,6 +87,40 @@ namespace EnrolmentSystem_BEHS.Datos
             }
         }
 
+        public string EnrolledCurrentYear(string c)
+        {
+            
+            int estudianteid = EncontrarIdEstudiante(c);
+
+            if (estudianteid != 0)
+            {
+                using (entity = new EnrollEntities())
+                {
+                    int year = Int32.Parse((entity.EstadoPorPersona.Where(a => a.personaid == estudianteid).ToList())[0].enrollmentYear + "");
+                    if (year == 2021)
+                    {
+                        return "1";
+                    }
+
+                    return "0";
+                }
+            }
+            return "0";
+        }
+
+        public int EncontrarIdEstudiante(string c)
+        {
+            using (entity = new EnrollEntities())
+            {
+                List<FormaDeContacto> busqueda = entity.FormaDeContacto.Where(a => a.Valor.Equals(c)).ToList();
+                if(busqueda.Count() > 0)
+                {
+                    int personaid = busqueda[0].PersonaID;
+                    return (entity.Relacion.Where(a => a.Persona2ID == personaid).ToList())[0].PersonaID;
+                }
+                return 0;
+            }
+        }
 
     }
 }
