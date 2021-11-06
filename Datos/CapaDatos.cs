@@ -24,7 +24,24 @@ namespace EnrolmentSystem_BEHS.Datos
             }
         }
 
+        public List<Usuarios> Ingresar(string c, string p)
+        {
+            using (entity = new EnrollEntities())
+            {
+                List<Usuarios> busqueda = entity.Usuarios.Where(a => a.correo.Equals(c) && a.contrasena.Equals(p)).ToList();
 
+                return busqueda;
+            }
+        }
+
+        public void Registrar(string c, string p)
+        {
+            using (entity = new EnrollEntities())
+            {
+                entity.CrearUsuario(c,p);
+                
+            }
+        }
 
 
     }

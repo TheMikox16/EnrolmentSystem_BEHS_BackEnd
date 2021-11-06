@@ -15,5 +15,28 @@ namespace EnrolmentSystem_BEHS.Logica
             int temp = datos.TitleDate();
             return temp;
         }
+
+        public List<Usuarios> Ingresar (string c, string p)
+        {
+            return datos.Ingresar(c, p);
+        }
+
+        public void Registrar(string c, string p)
+        {
+            datos.Registrar(c, p);
+        }
+
+        public bool VerificarCorreo(string s)
+        {
+            foreach(char c in s)
+            {
+                if (c.Equals('@') && s.ToCharArray()[s.Length-1] != c)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
