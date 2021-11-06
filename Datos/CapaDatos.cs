@@ -122,5 +122,14 @@ namespace EnrolmentSystem_BEHS.Datos
             }
         }
 
+        public List<LlenarDatos_Result> LlenarDatos(string c)
+        {
+            using (entity = new EnrollEntities())
+            {
+                List<LlenarDatos_Result> list = entity.LlenarDatos(c).ToList();
+                return list;
+            }
+        }
+
     }
 }

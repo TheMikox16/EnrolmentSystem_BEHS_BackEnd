@@ -56,5 +56,24 @@ namespace EnrolmentSystem_BEHS.Logica
             return datos.EnrolledCurrentYear(c);
         }
 
+        public string LlenarDatos(string c)
+        {
+            string temp = "";
+            List<LlenarDatos_Result> list = datos.LlenarDatos(c);
+
+            temp = "Student Enroll Summary:<br />" +
+                "Nombre: " + list[0].Nombre + "<br />" +
+                "First last name: " + list[0].PrimerApellido + "<br />" +
+                "Second last name: " + list[0].SegundoApellido + "<br />" +
+                "ID type: " + list[0].Descripcion + "<br />" +
+                "ID Value: " + list[0].Valor + "<br />" +
+                "School of procedence: " + list[0].escuela + "<br />" +
+                "Email of reference: " + list[1].contacto + "<br />" +
+                "Phone of reference: " + list[0].contacto + "<br /><br />" + 
+                "Enrollment Status: " + list[0].estado;
+
+            return temp;
+        }
+
     }
 }
