@@ -21,9 +21,14 @@ namespace EnrolmentSystem_BEHS.Logica
             return datos.Ingresar(c, p);
         }
 
-        public string Registrar(string c, string p)
+        public string Registrar(string c, string p, string co, string u, long pho)
         {
-            bool temp = datos.Registrar(c, p);
+            if (!p.Equals(co))
+            {
+                return "Passwords doesn't match, try again";
+            }
+
+            bool temp = datos.Registrar(c, p, u, pho);
 
             if (temp == true)
             {

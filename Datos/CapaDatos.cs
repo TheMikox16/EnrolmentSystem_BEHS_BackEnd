@@ -58,7 +58,7 @@ namespace EnrolmentSystem_BEHS.Datos
             }
         }
 
-        public bool Registrar(string c, string p)
+        public bool Registrar(string c, string p, string u, long pho)
         {
             using (entity = new EnrollEntities())
             {
@@ -70,7 +70,7 @@ namespace EnrolmentSystem_BEHS.Datos
                     return false;
                 }
 
-                entity.CrearUsuario(c,p);
+                entity.CrearUsuario(c,p,u,pho);
                 return true;
                 
             }
