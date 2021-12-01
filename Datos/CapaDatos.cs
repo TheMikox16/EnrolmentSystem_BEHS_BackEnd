@@ -83,6 +83,11 @@ namespace EnrolmentSystem_BEHS.Datos
             {
                 entity.Matricular(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf);
 
+                if (doc != null) {
+                    int estudianteid = EncontrarIdEstudiante(correo);
+
+                    entity.InsertarDocumento(estudianteid, doc);
+                }
                 return true;
             }
         }
@@ -146,6 +151,19 @@ namespace EnrolmentSystem_BEHS.Datos
             {
                 int i = entity.ActualizarUsuario(c,n,pho);
                 if(i <= 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        public bool ActualizarContra(string c, string n)
+        {
+            using (entity = new EnrollEntities())
+            {
+                int i = entity.ActualizarContra(c, n);
+                if (i <= 0)
                 {
                     return false;
                 }
