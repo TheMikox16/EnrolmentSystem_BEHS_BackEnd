@@ -26,6 +26,41 @@ namespace EnrolmentSystem_BEHS.Logica
         }
 
         /**
+         * Metodo para registrar un nuevo usuario. Verifica que las contraseñas sean correctas y cumplan
+         * con ciertos criterios de seguridad. Asi mismo, verifica los valores numericos y si el correo
+         * digitado esta o no registrado.
+        */
+        public string Registrar(string c, string p, string co, string u, string pho)
+        {
+            
+            if (!VerificarCorreo(c))
+            {
+                return "Email sintaxis is not allowed, please write a valid email address";
+            }
+
+            if (!p.Equals(co))
+            {
+                return "Passwords doesn't match, try again";
+            }
+
+            if (!VerificarTelefono(pho))
+            {
+                return "Phone Number has a invalid value, please try with a different value";
+            }
+
+            long phoneNumb = Int64.Parse(pho);
+
+            bool temp = datos.Registrar(c, p, u, phoneNumb);
+
+            if (temp == true)
+            {
+                return "User registered successfully";
+            }
+
+            return "That e-mail is already registered!";
+        }
+
+        /**
          * Metodo auxiliar que valida un correo según ciertos parametros
          * 
          */
@@ -132,56 +167,35 @@ namespace EnrolmentSystem_BEHS.Logica
             return temp;
 
         }
-    
-      
-      
 
-        public string Registrar(string c, string p)
+        public string ActualizarContra(string c, string o, string n, string con)
         {
-            bool temp = datos.Registrar(c, p);
-        }
-        /**
-         * Metodo para registrar un nuevo usuario. Verifica que las contraseñas sean correctas y cumplan
-         * con ciertos criterios de seguridad. Asi mismo, verifica los valores numericos y si el correo
-         * digitado esta o no registrado.
-        */
-        public string Registrar(string c, string p, string co, string u, string pho)
-        {
-            
-            if (!VerificarCorreo(c))
+            if (o.Equals(n))
             {
-                return "Email sintaxis is not allowed, please write a valid email address";
-            }
-        }
-
-
-        public string Registrar(string c, string p, string co, string u, long pho)
-        {
-
-            if (!p.Equals(co))
-            {
-                return "Passwords doesn't match, try again";
+                return "The new password must not be the same as the current one";
             }
 
-
-            if (!VerificarTelefono(pho))
+            if (!n.Equals(con))
             {
-                return "Phone Number has a invalid value, please try with a different value";
+                return "The new password does not match with confirmation, try again";
             }
 
-            long phoneNumb = Int64.Parse(pho);
+            List<Usuarios> l = datos.Ingresar(c, o);
 
-            bool temp = datos.Registrar(c, p, u, phoneNumb);
-
-            bool temp = datos.Registrar(c, p, u, pho);
-
-
-            if (temp == true)
+            if(l.Count() <= 0)
             {
-                return "User registered successfully";
+                return "Your current password does not match, try again";
             }
 
-            return "That e-mail is already registered!";
+            bool t = datos.ActualizarContra(c, n);
+
+            if (t)
+            {
+                return "Password updated successfully";
+            }
+
+            return "Failed to change password!!";
+
         }
 
     }
