@@ -131,5 +131,27 @@ namespace EnrolmentSystem_BEHS.Datos
             }
         }
 
+        public Usuarios LlenarInformacion(string c)
+        {
+            using (entity = new EnrollEntities())
+            {
+                List<Usuarios> u = entity.Usuarios.Where(a => a.correo.Equals(c)).ToList();
+                return u[0];
+            }
+        }
+
+        public bool ActualizarUsuario(string c, string n, long pho)
+        {
+            using (entity = new EnrollEntities())
+            {
+                int i = entity.ActualizarUsuario(c,n,pho);
+                if(i <= 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
     }
 }
