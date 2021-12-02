@@ -77,19 +77,24 @@ namespace EnrolmentSystem_BEHS.Datos
         }
 
 
-        public bool Matricular(string correo, string sN, string sL1, string sL2, long id, byte idT, string sNE, string sLE1, string sLE2, long idE, byte idTE, string procedence, int gen, int genE, int grado, int telf)
+        public bool Matricular(string correo, string sN, string sL1, string sL2, long id, byte idT, string sNE, string sLE1, string sLE2, long idE, byte idTE, string procedence, int gen, int genE, int grado, int telf, byte[] doc)
         {
             using (entity = new EnrollEntities())
             {
                 entity.Matricular(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf);
 
-                if (doc != null) {
-                    int estudianteid = EncontrarIdEstudiante(correo);
+            }
 
+            if (doc != null) {
+                int estudianteid = EncontrarIdEstudiante(correo);
+                using (entity = new EnrollEntities())
+                {
                     entity.InsertarDocumento(estudianteid, doc);
                 }
-                return true;
             }
+
+            return true;
+            
         }
 
         public string EnrolledCurrentYear(string c)
