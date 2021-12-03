@@ -43,7 +43,7 @@ namespace EnrolmentSystem_BEHS.Logica
                 return "Passwords doesn't match, try again";
             }
 
-            if (!VerificarTelefono(pho))
+            if (!VerificarLong(pho))
             {
                 return "Phone Number has a invalid value, please try with a different value";
             }
@@ -82,7 +82,7 @@ namespace EnrolmentSystem_BEHS.Logica
         /**
          * Metodo que intenta parsear el valor numerico del telefono. Si falla, regresa un false, si tiene exito, regresa true
          */ 
-        public bool VerificarTelefono(string s)
+        public bool VerificarLong(string s)
         {
             bool temp = Int64.TryParse(s,out long result);
             return temp;
@@ -97,6 +97,11 @@ namespace EnrolmentSystem_BEHS.Logica
             return datos.Matricular(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf, doc);
         }
 
+
+        public string Enrolled(string c)
+        {
+            return datos.Enrolled(c);
+        }
 
         /**
          * Metodo que determina si un estudiante ya se ha matriculado en ese año o si necesitara matricularse nuevamente 
@@ -135,7 +140,7 @@ namespace EnrolmentSystem_BEHS.Logica
          */
         public string ActualizarUsuario(string c, string n, string pho)
         {
-            if (!VerificarTelefono(pho))
+            if (!VerificarLong(pho))
             {
                 return "Phone Number has a invalid value, please try with a different value";
             }
@@ -198,5 +203,152 @@ namespace EnrolmentSystem_BEHS.Logica
 
         }
 
+        public List<Object[]> ListarMatricula()
+        {
+            List<Object[]> resultado = new List<Object[]>();
+            Object[] temp = new Object[10];
+            List<ListarMatricula_Result> ls = datos.ListarMatricula();
+
+            for (int i = 0; i <= ls.Count() - 2; i++)
+            {
+                temp = new Object[10];
+                temp[0] = ("Consulta exitosa");
+                temp[1] = "" + ls[i].Nombre;
+                temp[2] = "" + ls[i].PrimerApellido;
+                temp[3] = "" + ls[i].SegundoApellido;
+                temp[4] = "" + ls[i].Valor;
+                temp[5] = "" + ls[i].contacto;
+                temp[7] = "" + ls[i].escuela;
+                temp[8] = "" + ls[i].gradoid;
+                i++;
+                temp[6] = "" + ls[i].contacto;
+
+                resultado.Add(temp);
+
+            }
+
+            return resultado;
+
+        }
+
+        public List<Object[]> BuscarLista(string bus, bool c1, bool c2)
+        {
+            List<Object[]> resultado = new List<Object[]>();
+            Object[] temp = new Object[10];
+
+            if (c1)
+            {
+                List<ListarNombre_Result> ls = datos.ListarNombre(bus);
+                for (int i = 0; i <= ls.Count() - 2; i++)
+                {
+                    temp = new Object[10];
+                    temp[0] = ("Consulta exitosa");
+                    temp[1] = "" + ls[i].Nombre;
+                    temp[2] = "" + ls[i].PrimerApellido;
+                    temp[3] = "" + ls[i].SegundoApellido;
+                    temp[4] = "" + ls[i].Valor;
+                    temp[5] = "" + ls[i].contacto;
+                    temp[7] = "" + ls[i].escuela;
+                    temp[8] = "" + ls[i].gradoid;
+                    i++;
+                    temp[6] = "" + ls[i].contacto;
+
+                    resultado.Add(temp);
+
+                }
+                return resultado;
+            }
+            else if (c2)
+            {
+                List<LlenarDatos_Result> ls = datos.LlenarDatos(bus);
+                for (int i = 0; i <= ls.Count() - 2; i++)
+                {
+                    temp = new Object[10];
+                    temp[0] = ("Consulta exitosa");
+                    temp[1] = "" + ls[i].Nombre;
+                    temp[2] = "" + ls[i].PrimerApellido;
+                    temp[3] = "" + ls[i].SegundoApellido;
+                    temp[4] = "" + ls[i].Valor;
+                    temp[5] = "" + ls[i].contacto;
+                    temp[7] = "" + ls[i].escuela;
+                    temp[8] = "" + ls[i].gradoid;
+                    i++;
+                    temp[6] = "" + ls[i].contacto;
+
+                    resultado.Add(temp);
+
+                }
+                return resultado;
+            }
+            else
+            {
+                bool temp2 = VerificarLong(bus);
+                long h = 0;
+                if (temp2)
+                {
+                    h = Int64.Parse(bus);
+                }
+                List<ListarID_Result> ls = datos.ListarID(h);
+                for (int i = 0; i <= ls.Count() - 2; i++)
+                {
+                    temp = new Object[10];
+                    temp[0] = ("Consulta exitosa");
+                    temp[1] = "" + ls[i].Nombre;
+                    temp[2] = "" + ls[i].PrimerApellido;
+                    temp[3] = "" + ls[i].SegundoApellido;
+                    temp[4] = "" + ls[i].Valor;
+                    temp[5] = "" + ls[i].contacto;
+                    temp[7] = "" + ls[i].escuela;
+                    temp[8] = "" + ls[i].gradoid;
+                    i++;
+                    temp[6] = "" + ls[i].contacto;
+
+                    resultado.Add(temp);
+
+                }
+                return resultado;
+            }
+
+            
+        }
+
+        public void Borrar(string c)
+        {
+            datos.Borrar(c);
+        }
+
+        public string[] LlenarMatricula(string c)
+        {
+            List<LlenarMatricula_Result> ls = datos.LlenarMatricula(c);
+
+
+            string[] temp = new string[20];
+            temp[1] = ls[0].sN;
+            temp[2] = "" + ls[0].sL1;
+            temp[3] = "" + ls[0].sL2;
+            temp[4] = "" + ls[0].id;
+            temp[5] = "" + ls[0].idT;
+            temp[6] = "" + ls[0].sNE;
+            temp[7] = "" + ls[0].sLNE1;
+            temp[8] = "" + ls[0].sLNE2;
+            temp[9] = "" + ls[0].idE;
+            temp[10] = "" + ls[0].idTE;
+            temp[11] = "" + ls[0].procedente;
+            temp[12] = "" + ls[0].gen;
+            temp[13] = "" + ls[0].genE;
+            temp[14] = "" + ls[0].grado;
+            temp[15] = "" + ls[0].contacto;
+            temp[0] = "" + ls[1].contacto;
+
+            
+            return temp;
+        }
+
+        public bool ActualizarMatricula(string correo, string sN, string sL1, string sL2, long id, byte idT, string sNE, string sLE1, string sLE2, long idE, byte idTE, string procedence, int gen, int genE, int grado, int telf, byte[] doc)
+        {
+            return datos.ActualizarMatricula(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf, doc);
+        }
+
     }
+    
 }
