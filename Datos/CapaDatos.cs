@@ -97,6 +97,19 @@ namespace EnrolmentSystem_BEHS.Datos
             
         }
 
+        public string Enrolled(string c)
+        {
+            using (entity = new EnrollEntities())
+            {
+                bool t = entity.Usuarios.Where(a => a.correo == c).ToList()[0].matriculado;
+                if (t)
+                {
+                    return "1";
+                }
+                return "0";
+            }
+        }
+
         public string EnrolledCurrentYear(string c)
         {
             
@@ -174,6 +187,69 @@ namespace EnrolmentSystem_BEHS.Datos
                 }
                 return true;
             }
+        }
+
+        public List<ListarMatricula_Result> ListarMatricula()
+        {
+            using (entity = new EnrollEntities())
+            {
+                List<ListarMatricula_Result> list = entity.ListarMatricula().ToList();
+                return list;
+            }
+        }
+
+        public List<ListarNombre_Result> ListarNombre(string bus)
+        {
+            using (entity = new EnrollEntities())
+            {
+                List<ListarNombre_Result> list = entity.ListarNombre(bus).ToList();
+                return list;
+            }
+        }
+
+        public List<ListarID_Result> ListarID(long bus)
+        {
+            using (entity = new EnrollEntities())
+            {
+                List<ListarID_Result> list = entity.ListarID(bus).ToList();
+                return list;
+            }
+        }
+
+        public void Borrar(string c)
+        {
+            using (entity = new EnrollEntities())
+            {
+                entity.Borrar(c);
+            }
+        }
+
+        public List<LlenarMatricula_Result> LlenarMatricula(string c)
+        {
+            using (entity = new EnrollEntities())
+            {
+                List<LlenarMatricula_Result> ls = entity.LlenarMatricula(c).ToList();
+                return ls;
+            }
+        }
+
+        public bool ActualizarMatricula(string correo, string sN, string sL1, string sL2, long id, byte idT, string sNE, string sLE1, string sLE2, long idE, byte idTE, string procedence, int gen, int genE, int grado, int telf, byte[] doc)
+        {
+            using (entity = new EnrollEntities())
+            {
+                entity.ActualizarMatricula(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf);
+            }
+
+            if (doc != null)
+            {
+                int estudianteid = EncontrarIdEstudiante(correo);
+                using (entity = new EnrollEntities())
+                {
+                    entity.ActualizarDocumento(estudianteid, doc);
+                }
+            }
+
+            return true;
         }
 
     }
