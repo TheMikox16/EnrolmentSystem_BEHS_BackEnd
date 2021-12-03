@@ -92,9 +92,9 @@ namespace EnrolmentSystem_BEHS.Logica
          * Metodo que realiza la matricula por medio de una llamada a la base de datos. Se utiliza todos los datos introducidos
          * en el formulario de Matricular.aspx
          */
-        public bool Matricular(string correo, string sN, string sL1, string sL2, long id, byte idT, string sNE, string sLE1, string sLE2, long idE, byte idTE, string procedence, int gen, int genE, int grado, int telf)
+        public bool Matricular(string correo, string sN, string sL1, string sL2, long id, byte idT, string sNE, string sLE1, string sLE2, long idE, byte idTE, string procedence, int gen, int genE, int grado, int telf, byte[] doc)
         {
-            return datos.Matricular(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf);
+            return datos.Matricular(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf, doc);
         }
 
 
