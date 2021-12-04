@@ -20,7 +20,7 @@ namespace EnrolmentSystem_BEHS.Logica
          * Metodo para ingresar al sistema. Es una llamada a la capa de datos 
          * 
         */
-        public List<Usuarios> Ingresar (string c, string p)
+        public List<Usuarios> Ingresar(string c, string p)
         {
             return datos.Ingresar(c, p);
         }
@@ -32,7 +32,7 @@ namespace EnrolmentSystem_BEHS.Logica
         */
         public string Registrar(string c, string p, string co, string u, string pho)
         {
-            
+
             if (!VerificarCorreo(c))
             {
                 return "Email sintaxis is not allowed, please write a valid email address";
@@ -60,15 +60,46 @@ namespace EnrolmentSystem_BEHS.Logica
             return "That e-mail is already registered!";
         }
 
+        public string RegistrarAdmin(string c, string p, string co, string u, string pho, int i)
+        {
+
+            if (!VerificarCorreo(c))
+            {
+                return "Email sintaxis is not allowed, please write a valid email address";
+            }
+
+            if (!p.Equals(co))
+            {
+                return "Passwords doesn't match, try again";
+            }
+
+            if (!VerificarLong(pho))
+            {
+                return "Phone Number has a invalid value, please try with a different value";
+            }
+
+            long phoneNumb = Int64.Parse(pho);
+            byte ii = Byte.Parse(i + "");
+
+            bool temp = datos.RegistrarAdmin(c, p, u, phoneNumb, ii);
+
+            if (temp == true)
+            {
+                return "User registered successfully";
+            }
+
+            return "That e-mail is already registered!";
+        }
+
         /**
          * Metodo auxiliar que valida un correo según ciertos parametros
          * 
          */
         public bool VerificarCorreo(string s)
         {
-            foreach(char c in s)
+            foreach (char c in s)
             {
-                if (c.Equals('@') && s.ToCharArray()[s.Length-1] != c)
+                if (c.Equals('@') && s.ToCharArray()[s.Length - 1] != c)
                 {
                     if (Char.IsLetter(s[s.IndexOf('@') + 1]))
                     {
@@ -81,10 +112,10 @@ namespace EnrolmentSystem_BEHS.Logica
 
         /**
          * Metodo que intenta parsear el valor numerico del telefono. Si falla, regresa un false, si tiene exito, regresa true
-         */ 
+         */
         public bool VerificarLong(string s)
         {
-            bool temp = Int64.TryParse(s,out long result);
+            bool temp = Int64.TryParse(s, out long result);
             return temp;
         }
 
@@ -129,7 +160,7 @@ namespace EnrolmentSystem_BEHS.Logica
                 "ID Value: " + list[0].Valor + "<br />" +
                 "School of procedence: " + list[0].escuela + "<br />" +
                 "Email of reference: " + list[1].contacto + "<br />" +
-                "Phone of reference: " + list[0].contacto + "<br /><br />" + 
+                "Phone of reference: " + list[0].contacto + "<br /><br />" +
                 "Enrollment Status: " + list[0].estado;
 
             return temp;
@@ -187,9 +218,28 @@ namespace EnrolmentSystem_BEHS.Logica
 
             List<Usuarios> l = datos.Ingresar(c, o);
 
-            if(l.Count() <= 0)
+            if (l.Count() <= 0)
             {
                 return "Your current password does not match, try again";
+            }
+
+            bool t = datos.ActualizarContra(c, n);
+
+            if (t)
+            {
+                return "Password updated successfully";
+            }
+
+            return "Failed to change password!!";
+
+        }
+
+        public string ActualizarContra2(string c, string n, string con)
+        {
+
+            if (!n.Equals(con))
+            {
+                return "The new password does not match with confirmation, try again";
             }
 
             bool t = datos.ActualizarContra(c, n);
@@ -211,7 +261,7 @@ namespace EnrolmentSystem_BEHS.Logica
 
             for (int i = 0; i <= ls.Count() - 2; i++)
             {
-                temp = new Object[10];
+                temp = new Object[20];
                 temp[0] = ("Consulta exitosa");
                 temp[1] = "" + ls[i].Nombre;
                 temp[2] = "" + ls[i].PrimerApellido;
@@ -220,6 +270,7 @@ namespace EnrolmentSystem_BEHS.Logica
                 temp[5] = "" + ls[i].contacto;
                 temp[7] = "" + ls[i].escuela;
                 temp[8] = "" + ls[i].gradoid;
+                temp[9] = "" + ls[i].estado;
                 i++;
                 temp[6] = "" + ls[i].contacto;
 
@@ -250,6 +301,7 @@ namespace EnrolmentSystem_BEHS.Logica
                     temp[5] = "" + ls[i].contacto;
                     temp[7] = "" + ls[i].escuela;
                     temp[8] = "" + ls[i].gradoid;
+                    temp[9] = "" + ls[i].estado;
                     i++;
                     temp[6] = "" + ls[i].contacto;
 
@@ -309,7 +361,7 @@ namespace EnrolmentSystem_BEHS.Logica
                 return resultado;
             }
 
-            
+
         }
 
         public void Borrar(string c)
@@ -340,7 +392,7 @@ namespace EnrolmentSystem_BEHS.Logica
             temp[15] = "" + ls[0].contacto;
             temp[0] = "" + ls[1].contacto;
 
-            
+
             return temp;
         }
 
@@ -349,6 +401,177 @@ namespace EnrolmentSystem_BEHS.Logica
             return datos.ActualizarMatricula(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf, doc);
         }
 
+        public bool ActualizarEstado(string c, int e)
+        {
+            return datos.ActualizarEstado(c, e);
+        }
+
+        public List<Object[]> ListarUsuarios()
+        {
+            List<Usuarios> ls = datos.ListarUsuarios();
+
+            List<Object[]> resultado = new List<Object[]>();
+
+            string[] temp = new string[20];
+
+            foreach (Usuarios u in ls)
+            {
+                temp = new string[20];
+
+                temp[1] = "" + u.nombre;
+                temp[2] = "" + u.correo;
+                temp[3] = "" + u.telefono;
+                temp[4] = "" + u.nivel;
+                resultado.Add(temp);
+            }
+
+
+
+            return resultado;
+        }
+
+        public string BorrarUsuario(string c)
+        {
+            bool temp = datos.BorrarUsuario(c);
+            if (temp)
+            {
+                return "User deleted successfully";
+            }
+            return "User delete Failed!";
+        }
+
+        public string ActualizarPermiso(string c)
+        {
+            bool temp = datos.ActualizarPermiso(c);
+            if (temp)
+            {
+                return "User permission status changed successfully";
+            }
+            return "Userpermission status change Failed!";
+        }
+
+        public List<Object[]> BuscarUsuarios(string bus, bool c1, bool c2, bool c3, bool c4)
+        {
+            List<Object[]> resultado = new List<Object[]>();
+            Object[] temp = new Object[10];
+
+            byte i = 0;
+            if (c1)
+            {
+                i = 1;
+            }
+            else if (c2)
+            {
+                i = 2;
+            }
+            else if (c3)
+            {
+                i = 3;
+            }
+            else if (c4)
+            {
+                i = 4;
+            }
+
+            List<Usuarios> ls = datos.BuscarUsuarios(bus, i);
+
+            foreach (Usuarios u in ls)
+            {
+                temp = new string[20];
+
+                temp[1] = "" + u.nombre;
+                temp[2] = "" + u.correo;
+                temp[3] = "" + u.telefono;
+                temp[4] = "" + u.nivel;
+                resultado.Add(temp);
+            }
+
+            return resultado;
+
+        }
+
+        public List<Object[]> BuscarReportes(string bus, bool c1, bool c2, bool c3, bool c4, bool c5)
+        {
+            List<Object[]> resultado = new List<Object[]>();
+            Object[] temp = new Object[10];
+
+            byte a = 0;
+            if (c1)
+            {
+                a = 1;
+            }
+            else if(c2)
+            {
+                a = 2;
+            }
+            else if (c3)
+            {
+                a = 3;
+            }
+            else if (c4)
+            {
+                a = 4;
+            }
+            else if (c5)
+            {
+                a = 5;
+            }
+            List<ListarEstadoNombre_Result> lsn = null;
+            List<ListarEstado_Result> ls = null;
+
+            if (bus == null || bus.Equals(""))
+            {
+                ls = datos.BuscarReportes(a);
+            }
+            else
+            {
+                lsn = datos.BuscarReportesNombre(bus, a);
+            }
+
+            if(ls != null)
+            {
+                for (int i = 0; i <= ls.Count() - 2; i++)
+                {
+                    temp = new Object[20];
+                    temp[0] = ("Consulta exitosa");
+                    temp[1] = "" + ls[i].Nombre;
+                    temp[2] = "" + ls[i].PrimerApellido;
+                    temp[3] = "" + ls[i].SegundoApellido;
+                    temp[4] = "" + ls[i].Valor;
+                    temp[5] = "" + ls[i].contacto;
+                    temp[7] = "" + ls[i].escuela;
+                    temp[8] = "" + ls[i].gradoid;
+                    i++;
+                    temp[6] = "" + ls[i].contacto;
+
+                    resultado.Add(temp);
+
+                }
+                return resultado;
+            }
+            else
+            {
+                for (int i = 0; i <= lsn.Count() - 2; i++)
+                {
+                    temp = new Object[20];
+                    temp[0] = ("Consulta exitosa");
+                    temp[1] = "" + lsn[i].Nombre;
+                    temp[2] = "" + lsn[i].PrimerApellido;
+                    temp[3] = "" + lsn[i].SegundoApellido;
+                    temp[4] = "" + lsn[i].Valor;
+                    temp[5] = "" + lsn[i].contacto;
+                    temp[7] = "" + lsn[i].escuela;
+                    temp[8] = "" + lsn[i].gradoid;
+                    i++;
+                    temp[6] = "" + lsn[i].contacto;
+
+                    resultado.Add(temp);
+
+                }
+                return resultado;
+            }
+                
+        }
     }
     
 }
