@@ -21,7 +21,8 @@ namespace EnrolmentSystem_BEHS.Datos
         {
             using (entity = new EnrollEntities())
             {
-                int anno = entity.FechaAnno();
+                List<int?> i = entity.FechaAnno().ToList();
+                int anno = Int32.Parse(i[0] + "");
                 return anno;
             }
         }
@@ -65,14 +66,32 @@ namespace EnrolmentSystem_BEHS.Datos
 
                 List<Usuarios> busqueda = entity.Usuarios.Where(a => a.correo.Equals(c)).ToList();
 
-                if(busqueda.Count() > 0)
+                if (busqueda.Count() > 0)
                 {
                     return false;
                 }
 
-                entity.CrearUsuario(c,p,u,pho);
+                entity.CrearUsuario(c, p, u, pho);
                 return true;
-                
+
+            }
+        }
+
+        public bool RegistrarAdmin(string c, string p, string u, long pho, byte i)
+        {
+            using (entity = new EnrollEntities())
+            {
+
+                List<Usuarios> busqueda = entity.Usuarios.Where(a => a.correo.Equals(c)).ToList();
+
+                if (busqueda.Count() > 0)
+                {
+                    return false;
+                }
+
+                entity.CrearUsuarioPersonal(c, p, pho, u, i);
+                return true;
+
             }
         }
 
@@ -85,7 +104,8 @@ namespace EnrolmentSystem_BEHS.Datos
 
             }
 
-            if (doc != null) {
+            if (doc != null)
+            {
                 int estudianteid = EncontrarIdEstudiante(correo);
                 using (entity = new EnrollEntities())
                 {
@@ -94,7 +114,7 @@ namespace EnrolmentSystem_BEHS.Datos
             }
 
             return true;
-            
+
         }
 
         public string Enrolled(string c)
@@ -112,7 +132,7 @@ namespace EnrolmentSystem_BEHS.Datos
 
         public string EnrolledCurrentYear(string c)
         {
-            
+
             int estudianteid = EncontrarIdEstudiante(c);
 
             if (estudianteid != 0)
@@ -136,7 +156,7 @@ namespace EnrolmentSystem_BEHS.Datos
             using (entity = new EnrollEntities())
             {
                 List<FormaDeContacto> busqueda = entity.FormaDeContacto.Where(a => a.Valor.Equals(c)).ToList();
-                if(busqueda.Count() > 0)
+                if (busqueda.Count() > 0)
                 {
                     int personaid = busqueda[0].PersonaID;
                     return (entity.Relacion.Where(a => a.Persona2ID == personaid).ToList())[0].PersonaID;
@@ -167,8 +187,8 @@ namespace EnrolmentSystem_BEHS.Datos
         {
             using (entity = new EnrollEntities())
             {
-                int i = entity.ActualizarUsuario(c,n,pho);
-                if(i <= 0)
+                int i = entity.ActualizarUsuario(c, n, pho);
+                if (i <= 0)
                 {
                     return false;
                 }
@@ -239,8 +259,8 @@ namespace EnrolmentSystem_BEHS.Datos
             {
                 entity.ActualizarMatricula(correo, sN, sL1, sL2, id, idT, sNE, sLE1, sLE2, idE, idTE, procedence, gen, genE, grado, telf);
             }
-
             if (doc != null)
+
             {
                 int estudianteid = EncontrarIdEstudiante(correo);
                 using (entity = new EnrollEntities())
@@ -250,6 +270,78 @@ namespace EnrolmentSystem_BEHS.Datos
             }
 
             return true;
+        }
+
+        public bool ActualizarEstado(string c, int e)
+        {
+            using (entity = new EnrollEntities())
+            {
+                entity.ActualizarEstado(c, e);
+                return true;
+            }
+        }
+
+        public List<Usuarios> ListarUsuarios()
+        {
+            using (entity = new EnrollEntities())
+            {
+                List<Usuarios> list = entity.Usuarios.ToList();
+                return list;
+            }
+        }
+
+        public bool BorrarUsuario(string c)
+        {
+            using (entity = new EnrollEntities())
+            {
+                int i = entity.BorrarUsuario(c);
+                if(i > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public bool ActualizarPermiso(string c)
+        {
+            using (entity = new EnrollEntities())
+            {
+                int i = entity.ActualizarPermiso(c);
+                if (i > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public List<Usuarios> BuscarUsuarios(string n, byte i)
+        {
+            using (entity = new EnrollEntities())
+            {
+                if(n == null || n.Equals(""))
+                {
+                    return entity.Usuarios.Where(a => a.nivel == i).ToList();
+                }
+                return entity.Usuarios.Where(a => a.nombre.Contains(n) && a.nivel == i).ToList();
+            }
+        }
+
+        public List<ListarEstadoNombre_Result> BuscarReportesNombre(string n, byte i)
+        {
+            using (entity = new EnrollEntities())
+            {
+                return entity.ListarEstadoNombre(n, i).ToList();
+            }
+        }
+
+        public List<ListarEstado_Result> BuscarReportes(byte i)
+        {
+            using (entity = new EnrollEntities())
+            {
+                return entity.ListarEstado(i).ToList();
+            }
         }
 
     }
